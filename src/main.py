@@ -8,8 +8,8 @@ import os
 # Load data from project root
 df = load_data(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'data.json'))
 
-# Check for precomputed embeddings; generate locally if missing (won't run on PythonAnywhere without TensorFlow)
-static_dir = 'static'
+# Check for precomputed embeddings
+static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static')
 embeddings_path = os.path.join(static_dir, 'embeddings.tsv')
 metadata_path = os.path.join(static_dir, 'metadata.tsv')
 if not (os.path.exists(embeddings_path) and os.path.exists(metadata_path)):
@@ -97,6 +97,3 @@ def update_dashboard(keyword):
     network_title = f"Author-Subreddit Network (Keyword: {keyword or 'All'})"
     return fig1, fig3, summary, time_series_title, network_title
 
-
-if __name__ == '__main__':
-    app.run_server(debug=True)
