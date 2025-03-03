@@ -48,7 +48,7 @@ The following screenshots illustrate the dashboard’s functionality:
    Hosted on render: *https://reddit-analysis-dashboard.onrender.com*
 
 ## Video Link of the Project:
-
+   Google Drive link of the video: *https://drive.google.com/file/d/1xeIrq1HgG07l8QG6yp_jGUmaILk-Q7Io/view?usp=sharing*
 
 ## Data Conversion
 
