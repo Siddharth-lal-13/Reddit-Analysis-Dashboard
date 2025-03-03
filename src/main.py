@@ -5,8 +5,8 @@ import dash
 from dash import dcc, html, Input, Output
 import os
 
-# Load data
-df = load_data('../data/data.json')
+# Load data from project root
+df = load_data(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'data.json'))
 
 # Check for precomputed embeddings; generate locally if missing (won't run on PythonAnywhere without TensorFlow)
 static_dir = 'static'
