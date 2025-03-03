@@ -24,6 +24,7 @@ external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
 # Create Dash app with external stylesheet
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+server = app.server
 
 # Initial visualizations (default keyword)
 default_keyword = "anarchism"
@@ -97,3 +98,6 @@ def update_dashboard(keyword):
     network_title = f"Author-Subreddit Network (Keyword: {keyword or 'All'})"
     return fig1, fig3, summary, time_series_title, network_title
 
+
+if __name__ == '__main__':
+    app.run_server(debug=False)
