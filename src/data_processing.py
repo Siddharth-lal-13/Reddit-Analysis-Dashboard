@@ -4,10 +4,8 @@ from datetime import datetime
 
 
 def load_data(file_path):
-    """Load and preprocess the Reddit dataset."""
     with open(file_path, 'r') as f:
         data = json.load(f)
-
     posts = []
     for post in data:
         post_data = post['data']
@@ -22,10 +20,9 @@ def load_data(file_path):
             'author': post_data['author'],
             'url': post_data.get('url', '')
         })
-
     df = pd.DataFrame(posts)
     df['date'] = df['created_utc'].dt.date
-    df['text'] = df['title'] + ' ' + df['selftext']  # For keyword filtering and topics
+    df['text'] = df['title'] + ' ' + df['selftext']
     return df
 
 

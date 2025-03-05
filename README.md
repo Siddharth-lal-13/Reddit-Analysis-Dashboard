@@ -4,17 +4,20 @@
 
 ## Overview
 
-The Reddit Analysis Dashboard is an analytical tool developed to process and visualize social media data extracted from the subreddits `r/Anarchism`, `r/Conservative`, and `r/Protest`. Leveraging Python, Dash, and machine learning frameworks, this project provides an interactive interface for exploring temporal trends, community distributions, network interactions, and topic evolutions within the collected dataset. Enhanced by AI-driven natural language summaries powered by the Google Gemini API, the dashboard offers both quantitative and qualitative insights into subreddit activity and thematic shifts.
+The Reddit Analysis Dashboard is an analytical tool designed to process and visualize social media data from the subreddits r/Anarchism and r/Conservative. Built with Python, Dash, and machine learning frameworks, this project delivers an interactive interface for exploring temporal trends, community distributions, network interactions, and topic evolutions within a comprehensive dataset stored in data.json. Enhanced by AI-driven natural language summaries powered by the Google Gemini API, the dashboard provides both quantitative visualizations and qualitative insights into subreddit activity and thematic shifts.
 
-This project was developed as part of the Research Engineering Intern Assignment for SimPPL, adhering to the specified objectives of visualizing insights, applying AI/ML techniques, and deploying an interactive dashboard.
+Developed as part of the Research Engineering Intern Assignment for SimPPL, this project meets the objectives of visualizing insights, applying AI/ML techniques, and deploying an interactive dashboard. It scales to handle large datasets, offering a robust platform for analyzing social media dynamics across diverse communities.
+
+*Note*: While the original scope included r/Protest, the current dataset focuses on r/Anarchism and r/Conservative. Future expansions can incorporate additional subreddits as needed.
+
 
 ## Features
 
-- **Keyword-Filtered Time Series Analysis**: Utilizes Plotly to generate interactive line graphs, enabling users to filter post frequency by keywords (e.g., "anarchism", "protest") over a specified timeline, revealing temporal patterns such as activity spikes on February 16-17, 2025.
-- **Subreddit Distribution Visualization**: Employs a Plotly pie chart to display the proportional contribution of posts across `r/Anarchism`, `r/Conservative`, and `r/Protest`, providing a clear view of community dominance.
-- **Dynamic Network Graph**: Implements NetworkX and Plotly to render a keyword-filtered graph of author-subreddit interactions, illustrating connectivity patterns and key contributors within the network.
-- **Topic Trend Monitoring**: Applies Latent Dirichlet Allocation (LDA) via scikit-learn to extract topics, visualized as a time series to track their prevalence and evolution.
-- **AI-Generated Summaries**: Integrates the Google Gemini API to produce natural language summaries of trends based on user-selected keywords, enhancing accessibility for non-technical users.
+- **Keyword-Filtered Time Series Analysis**: Utilizes Plotly to create interactive line graphs, allowing users to filter post frequency by keywords (e.g., "anarchism", "conservative", "protest", "trump", "policy") over time. This reveals temporal patterns, such as posting peaks driven by significant events or discussions, dynamically calculated from the dataset.
+- **Subreddit Distribution Visualization**: Employs a Plotly pie chart to illustrate the proportional contribution of posts between r/Anarchism and r/Conservative, offering a clear snapshot of community activity within the dataset.
+- **Dynamic Network Graph**: Implements NetworkX and Plotly to render a keyword-filtered graph of author-subreddit interactions, highlighting connectivity patterns and influential contributors across the communities.
+- **Topic Trend Monitoring**: Applies Latent Dirichlet Allocation (LDA) via scikit-learn to extract and track topics over time, visualized as an interactive time series to monitor thematic prevalence and evolution.
+- **AI-Generated Summaries**: Integrates the Google Gemini API to generate concise natural language summaries of posting trends based on user-selected keywords. These summaries identify peak activity dates and dominant subreddits, enhancing accessibility for non-technical users.
 
 ## Screenshots
 
@@ -87,37 +90,55 @@ The project relies on the following Python libraries, with specific versions to 
  
 ## How It Works: Code and Design
 
-Here’s the scoop on how I built this:
+This section outlines the architecture, design decisions, and deployment strategy behind the Reddit Analysis Dashboard, providing a comprehensive view of its technical implementation.
 
-- **Code Breakdown**:
-  - `data_processing.py`: Loads and preps the JSON data—keeps the messy stuff contained.
-  - `visualizations.py`: Cranks out all the graphs with Plotly—time series, pie charts, networks, you name it.
-  - `ai_ml.py`: Handles the brainy bits—LDA for topics and Gemini API for summaries.
-  - `main.py`: The glue, setting up the Dash app, layout, and callbacks.
+### Code Breakdown
 
-- **Why This Way?**: I split it up to keep things manageable—data separate from visuals, ML separate from the frontend. It made debugging a lot less painful, especially when Render threw curveballs like port-binding woes!
+- **`data_processing.py`**: Manages data ingestion and preprocessing by loading the `data.json` file and transforming it into a structured pandas DataFrame. This module encapsulates data handling logic, ensuring clean input for downstream analysis.
+- **`visualizations.py`**: Generates interactive visualizations using Plotly, including time series plots, pie charts, network graphs, and topic trend analyses. This module leverages Plotly’s capabilities to deliver dynamic, user-friendly graphics.
+- **`ai_ml.py`**: Implements machine learning and AI functionalities, utilizing Latent Dirichlet Allocation (LDA) via scikit-learn for topic modeling and the Google Gemini API for generating natural language summaries of trends.
+- **`main.py`**: Serves as the central orchestrator, integrating all components into a Dash application. It defines the layout, configures interactive callbacks, and initializes the server for deployment.
 
-- **Thought Process**: Dash was my go-to because it’s Python-based and nails interactive viz with Plotly. The modular design grew out of wanting to keep my sanity as the project got bigger. Gemini API was a slam dunk for summaries—fast and friendly. Render came in when PythonAnywhere’s 512 MB limit choked on my ~488 MB of libraries; its Git setup and extra space were lifesavers.
+### Design Rationale
 
-- **Challenges**: Oh man, the port-binding saga on Render! Gunicorn kept saying `app` wasn’t callable—turns out it needed a proper Dash instance, not some half-baked setup. File paths were tricky too—`os.path` saved the day. Getting the API key right took a few tries, but once it clicked, it was smooth sailing.
+The project adopts a modular architecture to enhance maintainability and scalability:
+- **Separation of Concerns**: Data processing, visualization, and AI/ML tasks are isolated into distinct modules, simplifying debugging and future enhancements.
+- **Framework Selection**: Dash was chosen for its Python-native integration with Plotly, enabling rapid development of an interactive web interface without requiring external frontend frameworks.
+- **AI Integration**: The Google Gemini API was selected for its efficiency and ease of use in generating summaries, complementing the quantitative insights with qualitative interpretations.
 
+This modular approach evolved as the dataset and feature set expanded, ensuring the codebase remained organized and adaptable to increasing complexity.
 
-- **Deployment (Render)**:
-  - Same as above, excluding `tensorflow==2.12.0`, as embeddings are precomputed locally.
+### Development Considerations
 
+Several technical decisions shaped the project:
+- **Dash and Plotly**: Leveraging Dash’s seamless integration with Plotly provided a robust foundation for interactive visualizations, aligning with the goal of delivering an accessible dashboard.
+- **Render Deployment**: Initially considered PythonAnywhere, but its 512 MB memory limit was insufficient for the ~488 MB of required libraries. Render was adopted instead, offering greater resource availability and streamlined Git-based deployment.
+- **Precomputed Embeddings**: Topic embeddings are generated locally using TensorFlow and served statically, reducing runtime dependencies and optimizing deployment efficiency.
 
-## Rationale for Render Selection
+### Challenges and Solutions
 
-Render was chosen over alternatives like PythonAnywhere due to its superior storage capacity and deployment simplicity. PythonAnywhere’s 512 MB limit constrained the inclusion of essential libraries, whereas Render’s free tier supports enough without strict caps, with paid options scaling to 10 GB. Its Git-based deployment eliminates manual file uploads, and the integration of Gunicorn ensures robust WSGI server performance, aligning with the project’s scalability requirements.
+- **Render Port-Binding Issue**: Initial deployment on Render encountered errors with Gunicorn, which reported the `app` object as non-callable. This was resolved by ensuring `main.py` properly instantiated the Dash application’s server instance.
+- **File Path Management**: Relative file paths posed issues across environments. Using `os.path` functions standardized path resolution, ensuring consistency between local and deployed setups.
+- **API Key Configuration**: Integrating the Google Gemini API required multiple iterations to configure the API key correctly. Once resolved, it enabled reliable summary generation.
+
+### Deployment on Render
+
+The application is deployed on Render with the following configuration:
+- **Dependencies**: Specified in `requirements.txt`, excluding `tensorflow==2.12.0` since topic embeddings are precomputed locally and served from the `static/` directory.
+- **Runtime**: Utilizes Gunicorn to serve the Dash app, configured to bind to Render’s designated port.
+- **Build Process**: Leverages Render’s Git integration for automated deployment from the repository.
+
+This setup ensures a stable, scalable deployment, accommodating the project’s resource needs while maintaining performance.
+
 
 ## Technical Insights and Analysis
 
 The dashboard elucidates several key insights:
 
-- Temporal Peaks: A significant increase in posting activity on February 16-17, 2025, particularly in r/Anarchism, suggests a response to an external event or discussion catalyst.
-- Community Interactions: The network graph reveals clusters of author interactions, indicating cohesive subgroups within subreddits.
-- Thematic Evolution: Topic trends demonstrate shifts from ideological discourse to actionable themes, validated by LDA outputs.
-- AI Summarization: Gemini API summaries provide concise interpretations, enhancing user understanding without requiring deep data analysis.
+- **Temporal Peaks**: Dynamic analysis of posting activity identifies significant spikes, such as increased engagement around key dates (e.g., mid-February 2025 in r/Anarchism from sample data), likely tied to external events or community-driven discussions. These peaks are automatically detected and contextualized by subreddit, offering real-time insights into activity triggers.
+- **Community Interactions**: The network graph uncovers clusters of author-subreddit interactions, highlighting cohesive subgroups and influential contributors across r/Anarchism and r/Conservative. Keyword filtering reveals how specific topics (e.g., "trump" or "policy") shape connectivity patterns.
+- **Thematic Evolution**: Topic trends, derived from Latent Dirichlet Allocation (LDA), showcase shifts in discourse—from theoretical discussions in r/Anarchism to policy-focused debates in r/Conservative—validated by time-series visualizations of topic prevalence.
+- **AI Summarization**: The Google Gemini API delivers concise, natural language summaries of trends, pinpointing peak dates and dominant subreddits for user-selected keywords. This enhances comprehension, making complex data accessible without requiring in-depth analysis.
 
 ## Potential Enhancements
 
