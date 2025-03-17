@@ -12,12 +12,12 @@ Developed as part of the Research Engineering Intern Assignment for SimPPL, this
 
 
 ## Features
-
 - **Keyword-Filtered Time Series Analysis**: Utilizes Plotly to create interactive line graphs, allowing users to filter post frequency by keywords (e.g., "anarchism", "conservative", "protest", "trump", "policy") over time. This reveals temporal patterns, such as posting peaks driven by significant events or discussions, dynamically calculated from the dataset.
 - **Subreddit Distribution Visualization**: Employs a Plotly pie chart to illustrate the proportional contribution of posts between r/Anarchism and r/Conservative, offering a clear snapshot of community activity within the dataset.
 - **Dynamic Network Graph**: Implements NetworkX and Plotly to render a keyword-filtered graph of author-subreddit interactions, highlighting connectivity patterns and influential contributors across the communities.
 - **Topic Trend Monitoring**: Applies Latent Dirichlet Allocation (LDA) via scikit-learn to extract and track topics over time, visualized as an interactive time series to monitor thematic prevalence and evolution.
-- **AI-Generated Summaries**: Integrates the Google Gemini API to generate concise natural language summaries of posting trends based on user-selected keywords. These summaries identify peak activity dates and dominant subreddits, enhancing accessibility for non-technical users.
+- **AI-Driven Narrative**: Integrates the Google Gemini API to generate concise natural language summaries within a "Trend Analysis Summary" section, complemented by a top-level "Insights at a Glance" overview that synthesizes peak activity, key contributors, and discussion themes into a data-driven story. Connective captions between visualizations further guide users through the narrative flow.
+
 
 ## Screenshots
 

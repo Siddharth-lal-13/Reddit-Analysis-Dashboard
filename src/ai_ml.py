@@ -11,9 +11,10 @@ client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 def generate_summary(text):
     """Generate a summary of a trend using the Gemini API."""
+    prompt = f"Provide a concise summary of this trend, explaining what happened and possible reasons in simple terms: {text}"
     response = client.models.generate_content(
         model="gemini-2.0-flash",
-        contents=f"Summarize the following trend in simple terms: {text}",
+        contents=prompt,
     )
     return response.text
 
