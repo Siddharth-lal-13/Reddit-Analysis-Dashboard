@@ -56,11 +56,9 @@ The following screenshots illustrate the dashboard’s functionality:
 - **Google Drive Link**: [https://drive.google.com/file/d/1xeIrq1HgG07l8QG6yp_jGUmaILk-Q7Io/view?usp=sharing](https://drive.google.com/file/d/1xeIrq1HgG07l8QG6yp_jGUmaILk-Q7Io/view?usp=sharing)  
   Watch me demo the dashboard—see it in action!
 
-## Data Conversion
+## Installation Guide
 
-The raw data came in JSONL format, which wasn’t quite what I needed. So, I wrote a little script—[JSONL-to-JSON-Converter](https://github.com/Siddharth-lal-13/JSONL-to-JSON-Converter)—to turn it into JSON. It’s a simple parser that makes the data fit snugly into my processing pipeline.
-
-## Prerequisites
+### Prerequisites
 
 To deploy or replicate this project, the following prerequisites are required:
 
@@ -69,6 +67,92 @@ To deploy or replicate this project, the following prerequisites are required:
 - **Data Science Libraries**: Essential for numerical computation and data manipulation.
 - **Git**: Required for version control and repository management.
 - **Google Gemini API Key**: Obtainable from [makersuite.google.com](https://makersuite.google.com) under the free tier, necessary for AI-driven summarization.
+
+### Setting Up the Environment
+
+#### Windows
+
+```bash
+# Clone the repository
+git clone https://github.com/Siddharth-lal-13/reddit-analysis-dashboard.git
+cd reddit-analysis-dashboard
+
+# Create a virtual environment
+python -m venv venv
+venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment variables (PowerShell)
+$env:GEMINI_API_KEY="your-gemini-api-key"
+
+# Run the application
+python main.py
+```
+
+#### macOS/Linux
+
+```bash
+# Clone the repository
+git clone https://github.com/Siddharth-lal-13/reddit-analysis-dashboard.git
+cd reddit-analysis-dashboard
+
+# Create a virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment variables
+export GEMINI_API_KEY="your-gemini-api-key"
+
+# Run the application
+python main.py
+```
+
+### Docker Deployment (Optional)
+
+```bash
+# Clone the repository
+git clone https://github.com/Siddharth-lal-13/reddit-analysis-dashboard.git
+cd reddit-analysis-dashboard
+
+# Build Docker image
+docker build -t reddit-analysis-dashboard .
+
+# Run container
+docker run -p 8050:8050 -e GEMINI_API_KEY="your-gemini-api-key" reddit-analysis-dashboard
+```
+
+### Obtaining API Keys
+
+1. **Google Gemini API Key**:
+   - Visit [Google AI Studio](https://makersuite.google.com)
+   - Create an account or sign in
+   - Navigate to "API Keys" section
+   - Generate a new API key
+   - Copy the key and use it as the `GEMINI_API_KEY` environment variable
+
+### Data Preparation
+
+The dashboard requires data in the correct JSON format:
+
+1. If you have raw JSONL data, convert it using the [JSONL-to-JSON-Converter](https://github.com/Siddharth-lal-13/JSONL-to-JSON-Converter)
+2. Place the resulting `data.json` file in the project's root directory
+3. Ensure the JSON structure contains fields for subreddit, author, timestamp, and content
+
+### Troubleshooting Common Issues
+
+- **Missing Dependencies**: If you encounter import errors, verify all dependencies are installed: `pip install -r requirements.txt`
+- **API Key Issues**: Ensure your Gemini API key is correctly set as an environment variable
+- **Data Format Problems**: Validate your JSON data structure matches the expected format
+- **Port Conflicts**: If port 8050 is already in use, modify the port in `main.py`
+
+## Data Conversion
+
+The raw data came in JSONL format, which wasn't quite what I needed. So, I wrote a little script—[JSONL-to-JSON-Converter](https://github.com/Siddharth-lal-13/JSONL-to-JSON-Converter)—to turn it into JSON. It's a simple parser that makes the data fit snugly into my processing pipeline.
 
 ## Library Dependencies
 
@@ -82,7 +166,7 @@ The project relies on the following Python libraries, with specific versions to 
   - `plotly==5.14.1`: Interactive visualization library for graphs and charts.
   - `dash==2.9.3`: Web framework for building the interactive dashboard.
   - `networkx==3.1`: Graph theory library for network visualization.
-  - `google-geneai`: API client for Gemini-based summarization.
+  - `google-generativeai`: API client for Gemini-based summarization.
   - `gunicorn==20.1.0`: WSGI server for deployment.
 
  
@@ -93,7 +177,7 @@ This section outlines the architecture, design decisions, and deployment strateg
 ### Code Breakdown
 
 - **`data_processing.py`**: Manages data ingestion and preprocessing by loading the `data.json` file and transforming it into a structured pandas DataFrame. This module encapsulates data handling logic, ensuring clean input for downstream analysis.
-- **`visualizations.py`**: Generates interactive visualizations using Plotly, including time series plots, pie charts, network graphs, and topic trend analyses. This module leverages Plotly’s capabilities to deliver dynamic, user-friendly graphics.
+- **`visualizations.py`**: Generates interactive visualizations using Plotly, including time series plots, pie charts, network graphs, and topic trend analyses. This module leverages Plotly's capabilities to deliver dynamic, user-friendly graphics.
 - **`ai_ml.py`**: Implements machine learning and AI functionalities, utilizing Latent Dirichlet Allocation (LDA) via scikit-learn for topic modeling and the Google Gemini API for generating natural language summaries of trends.
 - **`main.py`**: Serves as the central orchestrator, integrating all components into a Dash application. It defines the layout, configures interactive callbacks, and initializes the server for deployment.
 
@@ -109,13 +193,13 @@ This modular approach evolved as the dataset and feature set expanded, ensuring 
 ### Development Considerations
 
 Several technical decisions shaped the project:
-- **Dash and Plotly**: Leveraging Dash’s seamless integration with Plotly provided a robust foundation for interactive visualizations, aligning with the goal of delivering an accessible dashboard.
+- **Dash and Plotly**: Leveraging Dash's seamless integration with Plotly provided a robust foundation for interactive visualizations, aligning with the goal of delivering an accessible dashboard.
 - **Render Deployment**: Initially considered PythonAnywhere, but its 512 MB memory limit was insufficient for the ~488 MB of required libraries. Render was adopted instead, offering greater resource availability and streamlined Git-based deployment.
 - **Precomputed Embeddings**: Topic embeddings are generated locally using TensorFlow and served statically, reducing runtime dependencies and optimizing deployment efficiency.
 
 ### Challenges and Solutions
 
-- **Render Port-Binding Issue**: Initial deployment on Render encountered errors with Gunicorn, which reported the `app` object as non-callable. This was resolved by ensuring `main.py` properly instantiated the Dash application’s server instance.
+- **Render Port-Binding Issue**: Initial deployment on Render encountered errors with Gunicorn, which reported the `app` object as non-callable. This was resolved by ensuring `main.py` properly instantiated the Dash application's server instance.
 - **File Path Management**: Relative file paths posed issues across environments. Using `os.path` functions standardized path resolution, ensuring consistency between local and deployed setups.
 - **API Key Configuration**: Integrating the Google Gemini API required multiple iterations to configure the API key correctly. Once resolved, it enabled reliable summary generation.
 
@@ -123,10 +207,10 @@ Several technical decisions shaped the project:
 
 The application is deployed on Render with the following configuration:
 - **Dependencies**: Specified in `requirements.txt`, excluding `tensorflow==2.12.0` since topic embeddings are precomputed locally and served from the `static/` directory.
-- **Runtime**: Utilizes Gunicorn to serve the Dash app, configured to bind to Render’s designated port.
-- **Build Process**: Leverages Render’s Git integration for automated deployment from the repository.
+- **Runtime**: Utilizes Gunicorn to serve the Dash app, configured to bind to Render's designated port.
+- **Build Process**: Leverages Render's Git integration for automated deployment from the repository.
 
-This setup ensures a stable, scalable deployment, accommodating the project’s resource needs while maintaining performance.
+This setup ensures a stable, scalable deployment, accommodating the project's resource needs while maintaining performance.
 
 
 ## Technical Insights and Analysis
@@ -148,7 +232,7 @@ The dashboard elucidates several key insights:
 
 ## Conclusion
 
-The Reddit Analysis Dashboard exemplifies a blend of data visualization, machine learning, and web deployment, meeting the SimPPL assignment’s objectives. Render’s deployment ensures accessibility and scalability, while the technical stack delivers robust analytical capabilities. This project showcases my ability to transform raw social media data into actionable insights through a user-friendly interface.
+The Reddit Analysis Dashboard exemplifies a blend of data visualization, machine learning, and web deployment, meeting the SimPPL assignment's objectives. Render's deployment ensures accessibility and scalability, while the technical stack delivers robust analytical capabilities. This project showcases my ability to transform raw social media data into actionable insights through a user-friendly interface.
 
 Author: Siddharth Lal
 
