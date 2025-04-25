@@ -1,5 +1,3 @@
-# research-engineering-intern-assignment
-
 # Reddit Analysis Dashboard
 
 ## Overview
